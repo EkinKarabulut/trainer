@@ -21,6 +21,7 @@ package v1alpha1
 type PodGroupPolicySourceApplyConfiguration struct {
 	Coscheduling *CoschedulingPodGroupPolicySourceApplyConfiguration `json:"coscheduling,omitempty"`
 	Volcano      *VolcanoPodGroupPolicySourceApplyConfiguration      `json:"volcano,omitempty"`
+	KAIScheduler *KAISchedulerPodGroupPolicySourceApplyConfiguration `json:"kaiScheduler,omitempty"`
 }
 
 // PodGroupPolicySourceApplyConfiguration constructs a declarative configuration of the PodGroupPolicySource type for use with
@@ -42,5 +43,13 @@ func (b *PodGroupPolicySourceApplyConfiguration) WithCoscheduling(value *Cosched
 // If called multiple times, the Volcano field is set to the value of the last call.
 func (b *PodGroupPolicySourceApplyConfiguration) WithVolcano(value *VolcanoPodGroupPolicySourceApplyConfiguration) *PodGroupPolicySourceApplyConfiguration {
 	b.Volcano = value
+	return b
+}
+
+// WithKAIScheduler sets the KAIScheduler field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the KAIScheduler field is set to the value of the last call.
+func (b *PodGroupPolicySourceApplyConfiguration) WithKAIScheduler(value *KAISchedulerPodGroupPolicySourceApplyConfiguration) *PodGroupPolicySourceApplyConfiguration {
+	b.KAIScheduler = value
 	return b
 }

@@ -43,3 +43,11 @@ func (b *PodGroupPolicyApplyConfiguration) WithVolcano(value *VolcanoPodGroupPol
 	b.PodGroupPolicySourceApplyConfiguration.Volcano = value
 	return b
 }
+
+// WithKAIScheduler sets the KAIScheduler field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the KAIScheduler field is set to the value of the last call.
+func (b *PodGroupPolicyApplyConfiguration) WithKAIScheduler(value *KAISchedulerPodGroupPolicySourceApplyConfiguration) *PodGroupPolicyApplyConfiguration {
+	b.PodGroupPolicySourceApplyConfiguration.KAIScheduler = value
+	return b
+}

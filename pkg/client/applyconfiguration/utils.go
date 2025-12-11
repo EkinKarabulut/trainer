@@ -44,6 +44,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &trainerv1alpha1.JobSetTemplateSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("JobStatus"):
 		return &trainerv1alpha1.JobStatusApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("KAISchedulerPodGroupPolicySource"):
+		return &trainerv1alpha1.KAISchedulerPodGroupPolicySourceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MLPolicy"):
 		return &trainerv1alpha1.MLPolicyApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MLPolicySource"):

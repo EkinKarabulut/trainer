@@ -38,6 +38,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.Initializer":                      schema_pkg_apis_trainer_v1alpha1_Initializer(ref),
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.JobSetTemplateSpec":               schema_pkg_apis_trainer_v1alpha1_JobSetTemplateSpec(ref),
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.JobStatus":                        schema_pkg_apis_trainer_v1alpha1_JobStatus(ref),
+		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.KAISchedulerPodGroupPolicySource": schema_pkg_apis_trainer_v1alpha1_KAISchedulerPodGroupPolicySource(ref),
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.MLPolicy":                         schema_pkg_apis_trainer_v1alpha1_MLPolicy(ref),
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.MLPolicySource":                   schema_pkg_apis_trainer_v1alpha1_MLPolicySource(ref),
 		"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.MPIMLPolicySource":                schema_pkg_apis_trainer_v1alpha1_MPIMLPolicySource(ref),
@@ -765,6 +766,26 @@ func schema_pkg_apis_trainer_v1alpha1_JobStatus(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_pkg_apis_trainer_v1alpha1_KAISchedulerPodGroupPolicySource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KAISchedulerPodGroupPolicySource represents configuration for the KAI Scheduler. KAI Scheduler provides advanced gang-scheduling capabilities with queue management, priority-based scheduling, and preemption support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"queue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "queue is the name of the KAI Scheduler queue to submit the job to. The queue must exist in the cluster for the job to be scheduled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_trainer_v1alpha1_MLPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -936,11 +957,17 @@ func schema_pkg_apis_trainer_v1alpha1_PodGroupPolicy(ref common.ReferenceCallbac
 							Ref:         ref("github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"),
 						},
 					},
+					"kaiScheduler": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KAI Scheduler plugin for gang-scheduling.",
+							Ref:         ref("github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.KAISchedulerPodGroupPolicySource"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.CoschedulingPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"},
+			"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.CoschedulingPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.KAISchedulerPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"},
 	}
 }
 
@@ -963,11 +990,17 @@ func schema_pkg_apis_trainer_v1alpha1_PodGroupPolicySource(ref common.ReferenceC
 							Ref:         ref("github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"),
 						},
 					},
+					"kaiScheduler": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KAI Scheduler plugin for gang-scheduling.",
+							Ref:         ref("github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.KAISchedulerPodGroupPolicySource"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.CoschedulingPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"},
+			"github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.CoschedulingPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.KAISchedulerPodGroupPolicySource", "github.com/kubeflow/trainer/v2/pkg/apis/trainer/v1alpha1.VolcanoPodGroupPolicySource"},
 	}
 }
 
