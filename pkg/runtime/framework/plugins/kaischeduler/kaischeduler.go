@@ -18,7 +18,6 @@ package kaischeduler
 
 import (
 	"context"
-	"strconv"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -28,11 +27,8 @@ import (
 )
 
 const (
-	// MinAvailableAnnotationKey is the annotation key used to pass the pre-calculated
-	// MinAvailable value to KAI-Scheduler's pod-grouper plugin.
-	MinAvailableAnnotationKey = "kai.scheduler/min-available"
-
 	// QueueLabelKey is the label key used to specify the scheduling queue for pods.
+	// KAI's pod-grouper will use this label to determine the scheduling queue.
 	QueueLabelKey = "kai.scheduler/queue"
 )
 
@@ -55,26 +51,15 @@ func (k *KAIScheduler) EnforcePodGroupPolicy(info *runtime.Info, trainJob *train
 		return nil
 	}
 
-	if info.Scheduler.PodAnnotations == nil {
-		info.Scheduler.PodAnnotations = map[string]string{}
-	}
 	if info.Scheduler.PodLabels == nil {
 		info.Scheduler.PodLabels = map[string]string{}
 	}
 
-	var totalMembers int32
-	for _, ps := range info.TemplateSpec.PodSets {
-		if ps.Count != nil {
-			totalMembers += *ps.Count
-		}
-	}
-
-	info.Scheduler.PodAnnotations[MinAvailableAnnotationKey] = strconv.FormatInt(int64(totalMembers), 10)
-
-	// Set the queue label from the KAIScheduler policy.
+	// Set the queue label.
 	// KAI's pod-grouper will use this label to determine the scheduling queue.
-	if queue := info.RuntimePolicy.PodGroupPolicy.KAIScheduler.Queue; queue != nil && *queue != "" {
-		info.Scheduler.PodLabels[QueueLabelKey] = *queue
+	// MinAvailable is calculated by KAI's pod-grouper from the JobSet spec.
+	if queue, ok := info.Annotations[QueueLabelKey]; ok && queue != "" {
+		info.Scheduler.PodLabels[QueueLabelKey] = queue
 	}
 
 	return nil
