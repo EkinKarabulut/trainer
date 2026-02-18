@@ -55,10 +55,7 @@ func (k *KAIScheduler) EnforcePodGroupPolicy(info *runtime.Info, trainJob *train
 		info.Scheduler.PodLabels = map[string]string{}
 	}
 
-	// Queue is configured by the cluster admin in the ClusterTrainingRuntime.
-	// An empty queue is treated as unset so KAI's pod-grouper can fall back
-	// to its default queue instead of looking up a queue named "".
-	// MinAvailable is calculated by KAI's pod-grouper from the JobSet spec.
+	// Empty queue is treated as unset so KAI's pod-grouper falls back to its default queue.
 	if kaiPolicy := info.RuntimePolicy.PodGroupPolicy.KAIScheduler; kaiPolicy.Queue != nil && *kaiPolicy.Queue != "" {
 		info.Scheduler.PodLabels[QueueLabelKey] = *kaiPolicy.Queue
 	}
