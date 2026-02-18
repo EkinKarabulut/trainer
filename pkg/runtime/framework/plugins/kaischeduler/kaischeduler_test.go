@@ -134,55 +134,14 @@ func TestKAIScheduler(t *testing.T) {
 				},
 			},
 		},
-		"queue from annotation": {
+		"no queue label when queue is empty string": {
 			info: &runtime.Info{
 				Scheduler: &runtime.Scheduler{},
-				Annotations: map[string]string{
-					"kai.scheduler/queue": "annotation-queue",
-				},
-				RuntimePolicy: runtime.RuntimePolicy{
-					PodGroupPolicy: &trainerv1alpha1.PodGroupPolicy{
-						PodGroupPolicySource: trainerv1alpha1.PodGroupPolicySource{
-							KAIScheduler: &trainerv1alpha1.KAISchedulerPodGroupPolicySource{},
-						},
-					},
-				},
-			},
-			trainJob: &trainerv1alpha1.TrainJob{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "train-job",
-					Namespace: metav1.NamespaceDefault,
-				},
-			},
-			wantInfo: &runtime.Info{
-				Scheduler: &runtime.Scheduler{
-					PodLabels: map[string]string{
-						"kai.scheduler/queue": "annotation-queue",
-					},
-				},
-				Annotations: map[string]string{
-					"kai.scheduler/queue": "annotation-queue",
-				},
-				RuntimePolicy: runtime.RuntimePolicy{
-					PodGroupPolicy: &trainerv1alpha1.PodGroupPolicy{
-						PodGroupPolicySource: trainerv1alpha1.PodGroupPolicySource{
-							KAIScheduler: &trainerv1alpha1.KAISchedulerPodGroupPolicySource{},
-						},
-					},
-				},
-			},
-		},
-		"annotation overrides typed API field": {
-			info: &runtime.Info{
-				Scheduler: &runtime.Scheduler{},
-				Annotations: map[string]string{
-					"kai.scheduler/queue": "priority-queue",
-				},
 				RuntimePolicy: runtime.RuntimePolicy{
 					PodGroupPolicy: &trainerv1alpha1.PodGroupPolicy{
 						PodGroupPolicySource: trainerv1alpha1.PodGroupPolicySource{
 							KAIScheduler: &trainerv1alpha1.KAISchedulerPodGroupPolicySource{
-								Queue: ptr.To("team-queue"),
+								Queue: ptr.To(""),
 							},
 						},
 					},
@@ -196,18 +155,13 @@ func TestKAIScheduler(t *testing.T) {
 			},
 			wantInfo: &runtime.Info{
 				Scheduler: &runtime.Scheduler{
-					PodLabels: map[string]string{
-						"kai.scheduler/queue": "priority-queue",
-					},
-				},
-				Annotations: map[string]string{
-					"kai.scheduler/queue": "priority-queue",
+					PodLabels: map[string]string{},
 				},
 				RuntimePolicy: runtime.RuntimePolicy{
 					PodGroupPolicy: &trainerv1alpha1.PodGroupPolicy{
 						PodGroupPolicySource: trainerv1alpha1.PodGroupPolicySource{
 							KAIScheduler: &trainerv1alpha1.KAISchedulerPodGroupPolicySource{
-								Queue: ptr.To("team-queue"),
+								Queue: ptr.To(""),
 							},
 						},
 					},
