@@ -55,10 +55,19 @@ func (k *KAIScheduler) EnforcePodGroupPolicy(info *runtime.Info, trainJob *train
 		info.Scheduler.PodLabels = map[string]string{}
 	}
 
-	// Set the queue label.
-	// KAI's pod-grouper will use this label to determine the scheduling queue.
+	// Determine queue with precedence: annotation override > typed API field.
+	// The typed field comes from ClusterTrainingRuntime (cluster admin default),
+	// while the annotation allows per-job override by individual users.
 	// MinAvailable is calculated by KAI's pod-grouper from the JobSet spec.
-	if queue, ok := info.Annotations[QueueLabelKey]; ok && queue != "" {
+	queue := ""
+	if kaiPolicy := info.RuntimePolicy.PodGroupPolicy.KAIScheduler; kaiPolicy.Queue != nil {
+		queue = *kaiPolicy.Queue
+	}
+	if annotationQueue, ok := info.Annotations[QueueLabelKey]; ok && annotationQueue != "" {
+		queue = annotationQueue
+	}
+
+	if queue != "" {
 		info.Scheduler.PodLabels[QueueLabelKey] = queue
 	}
 
